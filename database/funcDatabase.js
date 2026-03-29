@@ -1,19 +1,19 @@
-let funcionarios = [];
+let funcionarios = []
 
-function adicionarFuncionario(funcionario) {
-    funcionarios.push(funcionario);
+function adicionarFuncionario(func){
+    funcionarios.push(func)
 }
 
-function listarFuncionarios() {
-    return funcionarios;
+function listarFuncionarios(){
+    return funcionarios
 }
 
-function limpar() {
-    funcionarios = [];
+function limpar(){
+    funcionarios = []
 }
 
 module.exports = {
     adicionarFuncionario,
     listarFuncionarios,
     limpar
-};
+}

@@ -1,25 +1,30 @@
 const { listarFuncionarios, adicionarFuncionario } = require("../database/funcDatabase")
 
-function cadastrarFuncionario(funcionario) {
-    if (
-        !funcionario ||
-        !funcionario.nome ||
-        funcionario.idade <= 0 ||
-        !funcionario.setor ||
-        funcionario.salario <= 0
-    ) {
-        return false
-    }
+function cadastrarFuncionario(funcionario){
+    if (!funcionario) return false
 
-    adicionarFuncionario(funcionario);
+    const { nome, idade, setor, salario } = funcionario
+
+    if (!nome || nome.trim() === "") return false
+    if (idade <= 0) return false
+    if (salario <= 0) return false
+    if (!setor || setor.trim() === "") return false
+
+    adicionarFuncionario({
+        nome,
+        idade,
+        setor,
+        salario
+    })
+
     return true
 }
 
-function totalFuncionarios() {
+function totalFuncionarios(){
     return listarFuncionarios()
 }
 
 module.exports = {
-    totalFuncionarios,
-    cadastrarFuncionario
-};
+    cadastrarFuncionario,
+    totalFuncionarios
+}

@@ -1,118 +1,128 @@
-const { totalFuncionarios, cadastrarFuncionario } = require("../services/funcionariosService");
-const { limpar } = require("../database/funcDatabase");
+const { criarFuncionario, listar } = require("../controllers/funcionariosController")
+const { limpar } = require("../database/funcDatabase")
 
 beforeEach(() => {
-  limpar();
-});
+    limpar()
+})
 
 describe("Sistema de Funcionários", () => {
 
-  test("1. Banco começa vazio", () => {
-    expect(totalFuncionarios().length).toBe(0);
-  });
+    test("1. Banco começa vazio", () => {
+        expect(listar().dados.length).toBe(0)
+    })
 
-  test("2. Cadastrar funcionário válido", () => {
-    const resultado = cadastrarFuncionario({
-      nome: "João",
-      idade: 25,
-      setor: "TI",
-      salario: 3000
-    });
+    test("2. Cadastrar funcionário válido", () => {
+        const res = criarFuncionario({
+            nome: "João",
+            idade: 25,
+            setor: "TI",
+            salario: 2000
+        })
 
-    expect(resultado).toBe(true);
-  });
+        expect(res.status).toBe(201)
+    })
 
-  test("3. Não cadastrar sem nome", () => {
-    const resultado = cadastrarFuncionario({
-      nome: "",
-      idade: 25,
-      setor: "TI",
-      salario: 3000
-    });
+    test("3. Não cadastrar sem nome", () => {
+        const res = criarFuncionario({
+            nome: "",
+            idade: 25,
+            setor: "TI",
+            salario: 2000
+        })
 
-    expect(resultado).toBe(false);
-  });
+        expect(res.status).toBe(400)
+    })
 
-  test("4. Não cadastrar idade negativa", () => {
-    const resultado = cadastrarFuncionario({
-      nome: "João",
-      idade: -1,
-      setor: "TI",
-      salario: 3000
-    });
+    test("4. Não cadastrar idade negativa", () => {
+        const res = criarFuncionario({
+            nome: "João",
+            idade: -1,
+            setor: "TI",
+            salario: 2000
+        })
 
-    expect(resultado).toBe(false);
-  });
+        expect(res.status).toBe(400)
+    })
 
-  test("5. Não cadastrar salário negativo", () => {
-    const resultado = cadastrarFuncionario({
-      nome: "João",
-      idade: 25,
-      setor: "TI",
-      salario: -100
-    });
+    test("5. Não cadastrar salário negativo", () => {
+        const res = criarFuncionario({
+            nome: "João",
+            idade: 25,
+            setor: "TI",
+            salario: -100
+        })
 
-    expect(resultado).toBe(false);
-  });
+        expect(res.status).toBe(400)
+    })
 
-  test("6. Não cadastrar setor vazio", () => {
-    const resultado = cadastrarFuncionario({
-      nome: "João",
-      idade: 25,
-      setor: "",
-      salario: 3000
-    });
+    test("6. Não cadastrar setor vazio", () => {
+        const res = criarFuncionario({
+            nome: "João",
+            idade: 25,
+            setor: "",
+            salario: 2000
+        })
 
-    expect(resultado).toBe(false);
-  });
+        expect(res.status).toBe(400)
+    })
 
-  test("7. Adicionar 1 funcionário", () => {
-    cadastrarFuncionario({
-      nome: "Maria",
-      idade: 30,
-      setor: "RH",
-      salario: 4000
-    });
+    test("7. Adicionar 1 funcionário", () => {
+        criarFuncionario({
+            nome: "Ana",
+            idade: 22,
+            setor: "RH",
+            salario: 2500
+        })
 
-    expect(totalFuncionarios().length).toBe(1);
-  });
+        expect(listar().dados.length).toBe(1)
+    })
 
-  test("8. Adicionar vários funcionários", () => {
-    cadastrarFuncionario({ nome: "A", idade: 20, setor: "TI", salario: 2000 });
-    cadastrarFuncionario({ nome: "B", idade: 22, setor: "RH", salario: 2500 });
+    test("8. Adicionar vários funcionários", () => {
+        criarFuncionario({
+            nome: "A",
+            idade: 20,
+            setor: "TI",
+            salario: 2000
+        })
 
-    expect(totalFuncionarios().length).toBe(2);
-  });
+        criarFuncionario({
+            nome: "B",
+            idade: 22,
+            setor: "RH",
+            salario: 2500
+        })
 
-  test("9. Dados do funcionário corretos", () => {
-    cadastrarFuncionario({
-      nome: "Carlos",
-      idade: 28,
-      setor: "Financeiro",
-      salario: 3500
-    });
+        expect(listar().dados.length).toBe(2)
+    })
 
-    const lista = totalFuncionarios();
+    test("9. Dados do funcionário corretos", () => {
+        criarFuncionario({
+            nome: "Carlos",
+            idade: 28,
+            setor: "Financeiro",
+            salario: 3500
+        })
 
-    expect(lista[0]).toEqual({
-      nome: "Carlos",
-      idade: 28,
-      setor: "Financeiro",
-      salario: 3500
-    });
-  });
+        const lista = listar().dados
 
-  test("10. Banco limpa corretamente", () => {
-    cadastrarFuncionario({
-      nome: "João",
-      idade: 25,
-      setor: "TI",
-      salario: 3000
-    });
+        expect(lista[0]).toEqual({
+            nome: "Carlos",
+            idade: 28,
+            setor: "Financeiro",
+            salario: 3500
+        })
+    })
 
-    limpar();
+    test("10. Banco limpa corretamente", () => {
+        criarFuncionario({
+            nome: "Teste",
+            idade: 30,
+            setor: "TI",
+            salario: 3000
+        })
 
-    expect(totalFuncionarios().length).toBe(0);
-  });
+        limpar()
 
-});
+        expect(listar().dados.length).toBe(0)
+    })
+})
